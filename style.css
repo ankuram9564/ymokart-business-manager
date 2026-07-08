@@ -1,0 +1,33 @@
+body{
+background:#111;
+font-family:Arial;
+margin:0;
+color:white;
+}
+
+header{
+background:#ff7a00;
+padding:20px;
+text-align:center;
+}
+
+.container{
+padding:15px;
+}
+
+.card{
+background:#1e1e1e;
+border-radius:15px;
+padding:20px;
+margin-bottom:15px;
+box-shadow:0 0 10px rgba(0,0,0,.4);
+}
+
+.card h2{
+margin:0;
+color:#ffb347;
+}
+
+.card p{
+color:#ddd;
+}
