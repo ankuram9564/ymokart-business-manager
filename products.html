@@ -21,6 +21,9 @@
 <script>
 
 let products = JSON.parse(localStorage.getItem("products")) || [];
+  
+  localStorage.removeItem("products");
+products = [];
 
 showProducts();
 
