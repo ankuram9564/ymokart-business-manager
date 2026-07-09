@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products</title>
+</head>
+
+<body>
+
+<h1>📦 Product Manager</h1>
+
+<input type="text" id="name" placeholder="Product Name"><br><br>
+
+<button onclick="saveProduct()">Save Product</button>
+
+<h2>Products</h2>
+
+<ul id="list"></ul>
+
+<script>
+
+let products = JSON.parse(localStorage.getItem("products")) || [];
+
+showProducts();
+
+function saveProduct(){
+
+let name=document.getElementById("name").value;
+
+if(name=="") return;
+
+products.push(name);
+
+localStorage.setItem("products",JSON.stringify(products));
+
+document.getElementById("name").value="";
+
+showProducts();
+
+}
+
+function showProducts(){
+
+let html="";
+
+products.forEach(function(item){
+
+html+="<li>"+item+"</li>";
+
+});
+
+document.getElementById("list").innerHTML=html;
+
+}
+
+</script>
+
+</body>
+</html>
