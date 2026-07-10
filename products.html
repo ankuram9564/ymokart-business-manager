@@ -1,63 +1,153 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Products</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Products — YmoKart Business Manager</title>
+<link rel="icon" type="image/svg+xml" href="assets/icons/app-icon.svg">
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+<div class="app">
 
-<h1>📦 Product Manager</h1>
+  <div class="header">
+    <div class="page-title-row">
+      <a href="index.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+      </a>
+      <h1 id="pageTitle">Products</h1>
+    </div>
+  </div>
 
-<input type="text" id="name" placeholder="Product Name"><br><br>
+  <div class="page">
 
-<button onclick="saveProduct()">Save Product</button>
+    <!-- ===================== LIST VIEW ===================== -->
+    <div id="listView">
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+        <input type="text" id="searchInput" placeholder="Search by name, ART, brand, category...">
+      </div>
 
-<h2>Products</h2>
+      <div id="productList" class="product-list"></div>
+    </div>
 
-<ul id="list"></ul>
+    <!-- ===================== FORM VIEW (Add / Edit) ===================== -->
+    <div id="formView" class="hidden">
+      <form id="productForm">
+        <input type="hidden" id="productId">
 
-<script>
+        <div class="form-group">
+          <label>Product Image</label>
+          <div id="imageUploadBox" class="image-upload">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path><path d="M17 8l-5-5-5 5"></path><path d="M12 3v12"></path></svg>
+            <p>Tap to upload product image</p>
+            <input type="file" id="imageInput" accept="image/*">
+          </div>
+          <div id="imagePreviewBox" class="image-preview-box hidden mt-16">
+            <img id="imagePreview" src="" alt="Preview">
+          </div>
+        </div>
 
-let products = JSON.parse(localStorage.getItem("products")) || [];
-  
-  localStorage.removeItem("products");
-products = [];
+        <div class="form-row">
+          <div class="form-group">
+            <label>ART Number</label>
+            <input type="text" id="artNumber" class="form-control" placeholder="e.g. AR-1024" required>
+          </div>
+          <div class="form-group">
+            <label>Brand</label>
+            <input type="text" id="brand" class="form-control" placeholder="e.g. Lakhani Armaan" required>
+          </div>
+        </div>
 
-showProducts();
+        <div class="form-group">
+          <label>Product Name</label>
+          <input type="text" id="productName" class="form-control" placeholder="e.g. Men's Casual Sneaker" required>
+        </div>
 
-function saveProduct(){
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category</label>
+            <input type="text" id="category" class="form-control" placeholder="e.g. Sneakers" required>
+          </div>
+          <div class="form-group">
+            <label>Color</label>
+            <input type="text" id="color" class="form-control" placeholder="e.g. Black">
+          </div>
+        </div>
 
-let name=document.getElementById("name").value;
+        <div class="form-row">
+          <div class="form-group">
+            <label>Size</label>
+            <input type="text" id="size" class="form-control" placeholder="e.g. 6-10">
+          </div>
+          <div class="form-group">
+            <label>Stock (Units)</label>
+            <input type="number" id="stock" class="form-control" placeholder="e.g. 50" min="0" required>
+          </div>
+        </div>
 
-if(name=="") return;
+        <div class="form-row">
+          <div class="form-group">
+            <label>MRP (₹)</label>
+            <input type="number" id="mrp" class="form-control" placeholder="e.g. 999" min="0" required>
+          </div>
+          <div class="form-group">
+            <label>Dealer Price (₹)</label>
+            <input type="number" id="dealerPrice" class="form-control" placeholder="e.g. 650" min="0" required>
+          </div>
+        </div>
 
-products.push(name);
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="description" class="form-control" placeholder="Product details, material, features..."></textarea>
+        </div>
 
-localStorage.setItem("products",JSON.stringify(products));
+        <div class="form-group flex gap-8">
+          <button type="button" id="cancelFormBtn" class="btn btn-outline">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveProductBtn">Save Product</button>
+        </div>
+      </form>
+    </div>
 
-document.getElementById("name").value="";
+  </div>
 
-showProducts();
+  <!-- ===== FAB ===== -->
+  <button class="fab" id="fabAdd" aria-label="Add Product">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+  </button>
 
-}
+  <!-- ===== Bottom Navigation ===== -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item" data-page="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><path d="M9 22V12h6v10"></path></svg>
+      <span>Home</span>
+    </a>
+    <a href="products.html" class="nav-item" data-page="products.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+      <span>Products</span>
+    </a>
+    <a href="poster.html" class="nav-item" data-page="poster.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+      <span>Poster</span>
+    </a>
+    <a href="catalog.html" class="nav-item" data-page="catalog.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+      <span>Catalog</span>
+    </a>
+    <a href="reports.html" class="nav-item" data-page="reports.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 17V9M13 17V5M8 17v-3"></path></svg>
+      <span>Reports</span>
+    </a>
+    <a href="settings.html" class="nav-item" data-page="settings.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 005 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019 9c.11.36.3.68.6.95.3.27.66.44 1.05.5H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>
+      <span>Settings</span>
+    </a>
+  </nav>
 
-function showProducts(){
+</div>
 
-let html="";
-
-products.forEach(function(item){
-
-html+="<li>"+item+"</li>";
-
-});
-
-document.getElementById("list").innerHTML=html;
-
-}
-
-</script>
-
+<script src="storage.js"></script>
+<script src="app.js"></script>
+<script src="products.js"></script>
 </body>
 </html>

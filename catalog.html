@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>PDF Catalog — YmoKart Business Manager</title>
+<link rel="icon" type="image/svg+xml" href="assets/icons/app-icon.svg">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="page-title-row">
+      <a href="index.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+      </a>
+      <h1>PDF Catalog</h1>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <div id="noProductState" class="empty-state hidden">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+      <p>Catalog banane ke liye pehle Products page se products add karein.</p>
+    </div>
+
+    <div id="catalogBuilder" class="hidden">
+      <div class="card">
+        <h3>Select Categories</h3>
+        <p style="font-size:12.5px;color:var(--text-dim);margin-bottom:12px;">Category-wise professional PDF banega. Sab select ya specific categories choose karein.</p>
+        <div class="category-select-list" id="categoryChips"></div>
+        <button class="btn btn-outline btn-sm" id="selectAllBtn" type="button">Select All</button>
+      </div>
+
+      <div class="card">
+        <h3>Catalog Summary</h3>
+        <div class="settings-row">
+          <div>
+            <div class="label">Selected Categories</div>
+          </div>
+          <div class="stat-value" id="selectedCatCount" style="font-size:18px;">0</div>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="label">Total Products in Selection</div>
+          </div>
+          <div class="stat-value" id="selectedProductCount" style="font-size:18px;">0</div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="generatePdfBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+        <span id="generateBtnLabel">Generate PDF</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ===== Bottom Navigation ===== -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item" data-page="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><path d="M9 22V12h6v10"></path></svg>
+      <span>Home</span>
+    </a>
+    <a href="products.html" class="nav-item" data-page="products.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+      <span>Products</span>
+    </a>
+    <a href="poster.html" class="nav-item" data-page="poster.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+      <span>Poster</span>
+    </a>
+    <a href="catalog.html" class="nav-item" data-page="catalog.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M14 2v6h6"></path></svg>
+      <span>Catalog</span>
+    </a>
+    <a href="reports.html" class="nav-item" data-page="reports.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 17V9M13 17V5M8 17v-3"></path></svg>
+      <span>Reports</span>
+    </a>
+    <a href="settings.html" class="nav-item" data-page="settings.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 005 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019 9c.11.36.3.68.6.95.3.27.66.44 1.05.5H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>
+      <span>Settings</span>
+    </a>
+  </nav>
+
+</div>
+
+<script src="storage.js"></script>
+<script src="app.js"></script>
+<script>
+/* =========================================================
+   PDF Catalog — category-wise professional catalog generator
+   ========================================================= */
+
+let selectedCategories = new Set();
+let allCategories = [];
+
+function initCatalogPage(){
+  const products = DB.getProducts();
+  if(products.length === 0){
+    document.getElementById('noProductState').classList.remove('hidden');
+    document.getElementById('catalogBuilder').classList.add('hidden');
+    return;
+  }
+  allCategories = DB.getCategories();
+  selectedCategories = new Set(allCategories); // default: all selected
+  renderChips();
+  updateSummary();
+}
+
+function renderChips(){
+  const wrap = document.getElementById('categoryChips');
+  wrap.innerHTML = allCategories.map(cat => `
+    <button type="button" class="chip ${selectedCategories.has(cat) ? 'active' : ''}" data-cat="${escapeHTML(cat)}">${escapeHTML(cat)}</button>
+  `).join('');
+}
+
+document.getElementById('categoryChips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  const cat = chip.getAttribute('data-cat');
+  if(selectedCategories.has(cat)) selectedCategories.delete(cat);
+  else selectedCategories.add(cat);
+  renderChips();
+  updateSummary();
+});
+
+document.getElementById('selectAllBtn').addEventListener('click', () => {
+  if(selectedCategories.size === allCategories.length){
+    selectedCategories = new Set();
+  }else{
+    selectedCategories = new Set(allCategories);
+  }
+  renderChips();
+  updateSummary();
+});
+
+function updateSummary(){
+  const products = DB.getProducts().filter(p => selectedCategories.has((p.category || 'Uncategorized').trim()));
+  document.getElementById('selectedCatCount').textContent = selectedCategories.size;
+  document.getElementById('selectedProductCount').textContent = products.length;
+}
+
+/* ---------- PDF Generation ---------- */
+async function generateCatalogPDF(){
+  const products = DB.getProducts().filter(p => selectedCategories.has((p.category || 'Uncategorized').trim()));
+  if(products.length === 0){
+    showToast('Kam se kam ek category select karein', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('generatePdfBtn');
+  const label = document.getElementById('generateBtnLabel');
+  btn.disabled = true;
+  label.textContent = 'Generating...';
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const margin = 40;
+
+  // ----- Cover Page -----
+  doc.setFillColor(17, 17, 17);
+  doc.rect(0, 0, pageW, pageH, 'F');
+  doc.setFillColor(255, 122, 0);
+  doc.rect(0, pageH / 2 - 2, pageW, 4, 'F');
+  doc.setTextColor(255, 122, 0);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(42);
+  doc.text('YmoKart', pageW / 2, pageH / 2 - 40, { align: 'center' });
+  doc.setTextColor(245, 245, 245);
+  doc.setFontSize(20);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Product Catalog', pageW / 2, pageH / 2 + 10, { align: 'center' });
+  doc.setFontSize(11);
+  doc.setTextColor(170, 170, 170);
+  const dateStr = new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+  doc.text(dateStr, pageW / 2, pageH / 2 + 34, { align: 'center' });
+
+  // ----- Group products by category -----
+  const grouped = {};
+  products.forEach(p => {
+    const cat = (p.category || 'Uncategorized').trim();
+    if(!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(p);
+  });
+
+  const categories = Object.keys(grouped).sort();
+
+  for(const cat of categories){
+    doc.addPage();
+    let y = margin;
+
+    // Category header band
+    doc.setFillColor(255, 122, 0);
+    doc.rect(0, 0, pageW, 60, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.text(cat, margin, 38);
+    y = 90;
+
+    const items = grouped[cat];
+    for(let i = 0; i < items.length; i++){
+      const p = items[i];
+      const rowH = 130;
+
+      if(y + rowH > pageH - margin){
+        doc.addPage();
+        y = margin;
+      }
+
+      // Card background
+      doc.setFillColor(248, 248, 248);
+      doc.roundedRect(margin, y, pageW - margin * 2, rowH, 8, 8, 'F');
+      doc.setDrawColor(230, 230, 230);
+      doc.roundedRect(margin, y, pageW - margin * 2, rowH, 8, 8, 'S');
+
+      // Image
+      const imgBoxSize = rowH - 20;
+      if(p.image){
+        try{
+          doc.addImage(p.image, 'JPEG', margin + 10, y + 10, imgBoxSize, imgBoxSize, undefined, 'FAST');
+        }catch(e){
+          try{ doc.addImage(p.image, 'PNG', margin + 10, y + 10, imgBoxSize, imgBoxSize, undefined, 'FAST'); }catch(e2){}
+        }
+      }else{
+        doc.setFillColor(230,230,230);
+        doc.roundedRect(margin + 10, y + 10, imgBoxSize, imgBoxSize, 6, 6, 'F');
+      }
+
+      // Text details
+      const textX = margin + 20 + imgBoxSize;
+      let textY = y + 26;
+      doc.setTextColor(20, 20, 20);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.text(p.name || 'Unnamed Product', textX, textY);
+
+      textY += 20;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10.5);
+      doc.setTextColor(90, 90, 90);
+      doc.text(`ART: ${p.art || '-'}   |   Brand: ${p.brand || '-'}`, textX, textY);
+
+      textY += 17;
+      doc.text(`Color: ${p.color || '-'}   |   Size: ${p.size || '-'}   |   Stock: ${p.stock ?? 0}`, textX, textY);
+
+      textY += 24;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.setTextColor(255, 122, 0);
+      doc.text(`MRP: ${formatINR(p.mrp)}`, textX, textY);
+      doc.setTextColor(20, 20, 20);
+      doc.text(`Dealer: ${formatINR(p.dealerPrice)}`, textX + 140, textY);
+
+      y += rowH + 14;
+    }
+
+    // Footer page number
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(150, 150, 150);
+    doc.text(`YmoKart Business Manager — ${cat}`, margin, pageH - 20);
+  }
+
+  const stamp = new Date().toISOString().slice(0, 10);
+  doc.save(`ymokart-catalog-${stamp}.pdf`);
+
+  DB.incrementStat('catalogsGenerated');
+  showToast('Catalog PDF download ho gaya ✔');
+  btn.disabled = false;
+  label.textContent = 'Generate PDF';
+}
+
+document.getElementById('generatePdfBtn').addEventListener('click', generateCatalogPDF);
+
+initCatalogPage();
+</script>
+</body>
+</html>
